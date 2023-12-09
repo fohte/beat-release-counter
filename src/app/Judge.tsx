@@ -4,6 +4,8 @@ import { useRef, useCallback, useEffect, useState, FC } from 'react'
 
 import { getGamepads } from '@/app/getGamepads'
 
+type KeysType<T> = [T, T, T, T, T, T, T]
+
 export type Props = {
   gamepadIndex: number
 }
@@ -25,24 +27,87 @@ const useAnimationFrame = (callback = () => {}) => {
   }, [loop])
 }
 
+const RESET_JUDGE_DURATION = 500 as const
+
 export const Judge: FC<Props> = ({ gamepadIndex }) => {
-  const [startTime, setStartTime] = useState<number | null>(null)
-  const [duration, setDuration] = useState<number | null>(null)
+  const [startTimes, setStartTimes] = useState<KeysType<number | null>>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ])
+  const [durations, setDurations] = useState<KeysType<number | null>>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ])
+  const [latestEndTimes, setLatestEndTimes] = useState<KeysType<number | null>>(
+    [null, null, null, null, null, null, null]
+  )
 
   useAnimationFrame(() => {
     const gamepad = getGamepads()[gamepadIndex]
     if (gamepad == null) {
       return
     }
-    const buttonPressed = gamepad.buttons[0].pressed
-    if (buttonPressed && startTime === null) {
-      setStartTime(performance.now())
-    } else if (!buttonPressed && startTime !== null) {
-      const endTime = performance.now()
-      setDuration(endTime - startTime)
-      setStartTime(null)
-    }
+    const buttons = gamepad.buttons
+    const newStartTimes: KeysType<number | null> = [...startTimes]
+    const newDurations: KeysType<number | null> = [...durations]
+    const newLatestEndTimes: KeysType<number | null> = [...latestEndTimes]
+
+    ;[...Array(7).keys()].forEach((index) => {
+      const button = buttons[index]
+      const buttonPressed = button.pressed
+      const startTime = newStartTimes[index]
+      const latestEndTime = newLatestEndTimes[index]
+
+      if (
+        latestEndTime !== null &&
+        performance.now() - latestEndTime > RESET_JUDGE_DURATION
+      ) {
+        newDurations[index] = null
+        newLatestEndTimes[index] = null
+      }
+
+      if (buttonPressed) {
+        // button pressed
+        if (startTime === null) {
+          const newStartTime = performance.now()
+          newStartTimes[index] = newStartTime
+        }
+      } else {
+        // button released
+        if (startTime !== null) {
+          const endTime = performance.now()
+          newDurations[index] = endTime - startTime
+          newStartTimes[index] = null
+          newLatestEndTimes[index] = endTime
+        }
+      }
+    })
+
+    setStartTimes(newStartTimes)
+    setDurations(newDurations)
+    setLatestEndTimes(newLatestEndTimes)
   })
 
-  return <div>{duration !== null && <p>{duration.toFixed(0)} ms</p>}</div>
+  return (
+    <div>
+      {[...Array(7).keys()].map((index) => {
+        const duration = durations[index]
+        return (
+          <p key={index}>
+            {index}: {duration !== null ? duration.toFixed(0) : '-'} ms
+          </p>
+        )
+      })}
+    </div>
+  )
 }

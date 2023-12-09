@@ -28,6 +28,7 @@ const useAnimationFrame = (callback = () => {}) => {
 }
 
 const RESET_JUDGE_DURATION = 500 as const
+const TREAT_AS_LONG_NOTE_DURATION = 250 as const
 
 export const Judge: FC<Props> = ({ gamepadIndex }) => {
   const [startTimes, setStartTimes] = useState<KeysType<number | null>>([
@@ -85,10 +86,13 @@ export const Judge: FC<Props> = ({ gamepadIndex }) => {
       } else {
         // button released
         if (startTime !== null) {
-          const endTime = performance.now()
-          newDurations[index] = endTime - startTime
           newStartTimes[index] = null
-          newLatestEndTimes[index] = endTime
+
+          const endTime = performance.now()
+          if (endTime - startTime < TREAT_AS_LONG_NOTE_DURATION) {
+            newDurations[index] = endTime - startTime
+            newLatestEndTimes[index] = endTime
+          }
         }
       }
     })

@@ -3,7 +3,7 @@
 import { useRef, useCallback, useEffect, useState, FC } from 'react'
 
 import { getGamepads } from '@/lib/getGamepads'
-import { Duration } from '@/components/Duration'
+import { DurationText } from '@/components/DurationText'
 
 type KeysType<T> = [T, T, T, T, T, T, T]
 
@@ -109,7 +109,7 @@ export const Judge: FC<Props> = ({ gamepadIndex }) => {
         const duration = durations[index]
         return (
           <p key={index}>
-            {index}: <Duration duration={duration} />
+            {index}: <DurationText duration={duration} />
           </p>
         )
       })}

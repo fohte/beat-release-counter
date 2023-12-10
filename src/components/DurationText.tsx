@@ -17,7 +17,7 @@ const GREEN_THRESHOLD = 45 as const
 const YELLOW_THRESHOLD = 60 as const
 const ORANGE_THRESHOLD = 70 as const
 
-export const Duration: FC<Props> = ({ duration }) => {
+export const DurationText: FC<Props> = ({ duration }) => {
   const durationString = duration == null ? '-' : `${duration.toFixed(0)} ms`
   return (
     <span

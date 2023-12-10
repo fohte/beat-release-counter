@@ -3,9 +3,8 @@
 import { useRef, useCallback, useEffect, useState, FC } from 'react'
 
 import { getGamepads } from '@/lib/getGamepads'
-import { DurationText } from '@/components/DurationText'
-
-type KeysType<T> = [T, T, T, T, T, T, T]
+import { DurationDisplay } from '@/components/DurationDisplay'
+import { KeysType } from '@/types'
 
 export type Props = {
   gamepadIndex: number
@@ -31,7 +30,7 @@ const useAnimationFrame = (callback = () => { }) => {
 const RESET_JUDGE_DURATION = 500 as const
 const TREAT_AS_LONG_NOTE_DURATION = 250 as const
 
-export const Judge: FC<Props> = ({ gamepadIndex }) => {
+export const DurationCalculator: FC<Props> = ({ gamepadIndex }) => {
   const [startTimes, setStartTimes] = useState<KeysType<number | null>>([
     null,
     null,
@@ -103,16 +102,5 @@ export const Judge: FC<Props> = ({ gamepadIndex }) => {
     setLatestEndTimes(newLatestEndTimes)
   })
 
-  return (
-    <div>
-      {[...Array(7).keys()].map((index) => {
-        const duration = durations[index]
-        return (
-          <p key={index}>
-            {index}: <DurationText duration={duration} />
-          </p>
-        )
-      })}
-    </div>
-  )
+  return <DurationDisplay durations={durations} />
 }

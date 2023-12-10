@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { Judge } from '@/components/Judge'
+import { DurationCalculator } from '@/components/DurationCalculator'
 import { GamepadSelect } from '@/components/GamepadSelect'
 
 export default function Home() {
@@ -11,7 +11,9 @@ export default function Home() {
   return (
     <div>
       <GamepadSelect onChange={setGamepadIndex} />
-      {gamepadIndex != null && <Judge gamepadIndex={gamepadIndex} />}
+      {gamepadIndex != null && (
+        <DurationCalculator gamepadIndex={gamepadIndex} />
+      )}
     </div>
   )
 }

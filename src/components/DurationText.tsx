@@ -18,12 +18,12 @@ const YELLOW_THRESHOLD = 60 as const
 const ORANGE_THRESHOLD = 70 as const
 
 export const DurationText: FC<Props> = ({ duration }) => {
-  const durationString = duration == null ? '-' : `${duration.toFixed(0)} ms`
+  const durationString = duration == null ? '-' : `${duration.toFixed(0)}`
   return (
     <span
       className={
         duration == null
-          ? undefined
+          ? css({ opacity: 0 })
           : duration < BLUE_THRESHOLD
             ? blueStyle
             : duration < GREEN_THRESHOLD

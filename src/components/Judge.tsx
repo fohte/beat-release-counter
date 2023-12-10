@@ -2,8 +2,8 @@
 
 import { useRef, useCallback, useEffect, useState, FC } from 'react'
 
-import { getGamepads } from '@/app/getGamepads'
-import { Duration } from '@/app/Duration'
+import { getGamepads } from '@/lib/getGamepads'
+import { Duration } from '@/components/Duration'
 
 type KeysType<T> = [T, T, T, T, T, T, T]
 
@@ -11,7 +11,7 @@ export type Props = {
   gamepadIndex: number
 }
 
-const useAnimationFrame = (callback = () => {}) => {
+const useAnimationFrame = (callback = () => { }) => {
   const reqIdRef = useRef<number | null>(null)
   const loop = useCallback(() => {
     reqIdRef.current = requestAnimationFrame(loop)
@@ -64,39 +64,39 @@ export const Judge: FC<Props> = ({ gamepadIndex }) => {
     const newDurations: KeysType<number | null> = [...durations]
     const newLatestEndTimes: KeysType<number | null> = [...latestEndTimes]
 
-    ;[...Array(7).keys()].forEach((index) => {
-      const button = buttons[index]
-      const buttonPressed = button.pressed
-      const startTime = newStartTimes[index]
-      const latestEndTime = newLatestEndTimes[index]
+      ;[...Array(7).keys()].forEach((index) => {
+        const button = buttons[index]
+        const buttonPressed = button.pressed
+        const startTime = newStartTimes[index]
+        const latestEndTime = newLatestEndTimes[index]
 
-      if (
-        latestEndTime !== null &&
-        performance.now() - latestEndTime > RESET_JUDGE_DURATION
-      ) {
-        newDurations[index] = null
-        newLatestEndTimes[index] = null
-      }
-
-      if (buttonPressed) {
-        // button pressed
-        if (startTime === null) {
-          const newStartTime = performance.now()
-          newStartTimes[index] = newStartTime
+        if (
+          latestEndTime !== null &&
+          performance.now() - latestEndTime > RESET_JUDGE_DURATION
+        ) {
+          newDurations[index] = null
+          newLatestEndTimes[index] = null
         }
-      } else {
-        // button released
-        if (startTime !== null) {
-          newStartTimes[index] = null
 
-          const endTime = performance.now()
-          if (endTime - startTime < TREAT_AS_LONG_NOTE_DURATION) {
-            newDurations[index] = endTime - startTime
-            newLatestEndTimes[index] = endTime
+        if (buttonPressed) {
+          // button pressed
+          if (startTime === null) {
+            const newStartTime = performance.now()
+            newStartTimes[index] = newStartTime
+          }
+        } else {
+          // button released
+          if (startTime !== null) {
+            newStartTimes[index] = null
+
+            const endTime = performance.now()
+            if (endTime - startTime < TREAT_AS_LONG_NOTE_DURATION) {
+              newDurations[index] = endTime - startTime
+              newLatestEndTimes[index] = endTime
+            }
           }
         }
-      }
-    })
+      })
 
     setStartTimes(newStartTimes)
     setDurations(newDurations)

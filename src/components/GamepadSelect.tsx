@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react'
 
-import { getGamepads } from '@/app/getGamepads'
+import { getGamepads } from '@/lib/getGamepads'
 
 export type Props = {
   onChange: (gamepadIndex: number | null) => void

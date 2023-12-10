@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 
-import { Judge } from '@/app/Judge'
-import { GamepadSelect } from '@/app/GamepadSelect'
+import { Judge } from '@/components/Judge'
+import { GamepadSelect } from '@/components/GamepadSelect'
 
 export default function Home() {
   const [gamepadIndex, setGamepadIndex] = useState<number | null>(null)

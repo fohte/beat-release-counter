@@ -12,7 +12,7 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-and open the browser ande navigate to `https://localhost:3000`.
+and open the browser and navigate to `https://localhost:3000`.  
 (Note: Use HTTPS to ensure a secure context, which is required for the Gamepad API)
 
 ## Current Tasks

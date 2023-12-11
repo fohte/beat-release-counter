@@ -1,6 +1,6 @@
 # Beat Release Counter
 
-> [!WARN]
+> [!WARNING]
 > This project is currently under active development.
 
 Beat Release Counter is a web application that displays the time (in milliseconds) between when a button is pressed and released for beatmania IIDX/BMS players, offering a unique way to analyze your gameplay and improve timing accuracy.
